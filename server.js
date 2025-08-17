@@ -14,7 +14,8 @@ const allowedOrigins = [
   'http://127.0.0.1:5500',
   'http://localhost:5173/',
   'https://registration-portal-rust.vercel.app/',
-  'https://reg-portal-backend.vercel.app/'
+  'https://reg-portal-backend.vercel.app/',
+  'https://registration-portal-5g5z.vercel.app/',
 
 ];
 
@@ -91,5 +92,6 @@ app.post('/api/contact', async (req, res) => {
 // Start Server
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
 
 
