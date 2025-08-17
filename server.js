@@ -10,14 +10,11 @@ const PORT = process.env.PORT || 3000;
 
 // CORS Configuration
 const allowedOrigins = [
-  'https://istetiet.com',
-  'https://iste-website-kappa.vercel.app/',
+
   'http://127.0.0.1:5500',
   'http://localhost:5173/',
-  'https://iste-mainwebsite.vercel.app',
-    ' https://iste-mainwebsite.vercel.app ',
-  'https://iste-mainwebsite.vercel.app/contact',
-  'https://istetiet.com/contact',
+  'https://registration-portal-rust.vercel.app/'
+
 ];
 
 app.use(
@@ -51,12 +48,12 @@ mongoose
 
 // Updated Contact Form Schema to match frontend
 const contactSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: String, required: true },
-  message: { type: String, required: true },
-  submittedAt: { type: Date, default: Date.now },
+  fullName: { type: String, required: true },
+  admissionNumber: { type: String, required: true, unique: true },
+  branch: { type: String, required: true },
+  phoneNumber: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  submittedAt: { type: Date, default: Date.now },
 });
 
 const Contact = mongoose.model('Contact', contactSchema);
@@ -69,13 +66,17 @@ app.post('/api/contact', async (req, res) => {
   const { firstName, lastName, email, phone, message } = req.body;
 
   // Validate required fields
-  if (!firstName || !lastName || !email || !phone || !message) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
+  if (!fullName || !admissionNumber || !branch || !phoneNumber || !email) {
+        return res.status(400).json({ error: 'All fields are required.' });
+      }
 
   try {
     // Save to database
-    const contact = new Contact({ firstName, lastName, email, phone, message });
+    const contact = new Contact({  fullName,
+            admissionNumber,
+            branch,
+            phoneNumber,
+            email, });
     await contact.save();
 
     console.log('Form submitted successfully!');

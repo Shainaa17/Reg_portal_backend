@@ -3,9 +3,10 @@ import { connectToDatabase } from '../lib/mongodb';
 
 const contactSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true },
-  message: { type: String, required: true },
-  submittedAt: { type: Date, default: Date.now },
+  email: { type: String, required: true, unique: true },
+  branch: { type: String, required: true },
+  phoneNumber: { type: String, required: true },
+  admissionNumber: { type: String, required: true, unique: true },
 });
 
 let Contact = mongoose.models.Contact || mongoose.model('Contact', contactSchema);
@@ -18,15 +19,19 @@ export default async function handler(req, res) {
 
   // Handle POST requests
   if (req.method === 'POST') {
-    const { name, email, message } = req.body;
+    const {name, email, branch, phoneNumber, admissionNumber} = req.body;
 
-    if (!name || !email || !message) {
+    if (!name || !email || !branch || !phoneNumber || !admissionNumber) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
     try {
       await connectToDatabase();
-      const contact = new Contact({ name, email, message });
+      const contact = new Contact({ name,
+        email,
+        branch,
+        phoneNumber,
+        admissionNumber, });
       await contact.save();
       return res.status(200).json({ message: 'Form submission saved to database!' });
     } catch (error) {
